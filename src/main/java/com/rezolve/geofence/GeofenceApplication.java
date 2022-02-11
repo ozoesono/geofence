@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GeoFenceApplication {
+public class GeofenceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GeoFenceApplication.class, args);
+        SpringApplication.run(GeofenceApplication.class, args);
     }
 
 }
