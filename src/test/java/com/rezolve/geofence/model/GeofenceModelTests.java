@@ -20,7 +20,7 @@ public class GeofenceModelTests {
     public void testCanCreateValidGeofence() {
         Geofence geofence = Geofence.builder()
             .lat(BigDecimal.valueOf(20.0))
-            .lat(BigDecimal.valueOf(11.1))
+            .lng(BigDecimal.valueOf(11.1))
             .build();
         assertEquals(BigDecimal.valueOf(20.0), geofence.getLat(), "Lat value is set when creating valid Geofence");
         assertEquals(BigDecimal.valueOf(11.1), geofence.getLng(), "Lng value is set when creating valid Geofence");
