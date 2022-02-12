@@ -1,16 +1,21 @@
 package com.rezolve.geofence.model;
 
 import com.rezolve.geofence.util.validator.GeoFencePrecisionConstraint;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 
 @Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
 public class Geofence {
 
     @Id
@@ -18,8 +23,8 @@ public class Geofence {
     Long id;
     @NotNull
     @GeoFencePrecisionConstraint
-    private BigDecimal lat;
+    private Double lat;
     @GeoFencePrecisionConstraint
     @NotNull
-    private BigDecimal lng;
+    private Double lng;
 }

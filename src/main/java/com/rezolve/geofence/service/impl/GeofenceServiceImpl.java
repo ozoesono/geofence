@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import javax.validation.Validator;
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ public class GeofenceServiceImpl implements GeofenceService {
     private Validator validator;
 
     @Override
+    @Transactional
     public Geofence saveGeofence(Geofence geofence) {
         log.info("Saving Geofence: [{}]", geofence);
         if (!validator.validate(geofence).isEmpty()) {
@@ -30,6 +32,7 @@ public class GeofenceServiceImpl implements GeofenceService {
     }
 
     @Override
+    @Transactional
     public Geofence getGeofence(Long id) {
         log.info("Getting Geofence by id: [{}]", id);
         Optional<Geofence> geofence = geofenceRepository.findById(id);
@@ -40,6 +43,7 @@ public class GeofenceServiceImpl implements GeofenceService {
     }
 
     @Override
+    @Transactional
     public void deleteGeoFence(Long id) {
         log.info("Deleting Geofence by id: [{}]", id);
         Optional<Geofence> geofence = geofenceRepository.findById(id);
