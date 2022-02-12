@@ -18,19 +18,19 @@ public class GeofenceModelTests {
     @Test
     public void testCanCreateValidGeofence() {
         Geofence geofence = Geofence.builder()
-            .lat(BigDecimal.valueOf(20.0))
-            .lng(BigDecimal.valueOf(11.1000000))
+            .lat(20.0)
+            .lng(11.1000000)
             .build();
-        assertEquals(BigDecimal.valueOf(20.0), geofence.getLat(), "Lat value is set when creating valid Geofence");
-        assertEquals(BigDecimal.valueOf(11.1000000), geofence.getLng(), "Lng value is set when creating valid Geofence");
+        assertEquals(20.0, geofence.getLat(), "Lat value is set when creating valid Geofence");
+        assertEquals(11.1000000, geofence.getLng(), "Lng value is set when creating valid Geofence");
         assertTrue(isValid(geofence), "Can create a valid Geofence");
     }
 
     @Test
-    public void testGeofenceWithNoPrecisionIsInvalid() {
+    public void testGeofenceWithPrecisionAboveSevenIsInvalid() {
         Geofence geofence = Geofence.builder()
-            .lat(BigDecimal.valueOf(20))
-            .lng(BigDecimal.valueOf(11))
+            .lat(20.00290909092)
+            .lng(11.20903902902)
             .build();
         assertFalse(isValid(geofence), "Geofence is invalid");
     }

@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.validation.Validator;
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Optional;
 
@@ -34,14 +33,14 @@ public class GeofenceServiceTests {
     @Test
     public void testCanCreateGeofence() {
         Geofence geofence = Geofence.builder()
-            .lng(BigDecimal.valueOf(20.001))
-            .lat(BigDecimal.valueOf(-1.3))
+            .lng(20.001)
+            .lat(-1.3)
             .build();
 
         Geofence persistedGeofence = Geofence.builder()
             .id(1L)
-            .lng(BigDecimal.valueOf(20.001))
-            .lat(BigDecimal.valueOf(-1.3))
+            .lng(20.001)
+            .lat(-1.3)
             .build();
         when(geofenceRepository.save(geofence)).thenReturn(persistedGeofence);
         when(validator.validate(geofence)).thenReturn(new HashSet<>());
@@ -55,8 +54,8 @@ public class GeofenceServiceTests {
     public void testCanGetGeofence() {
         Geofence geofence = Geofence.builder()
             .id(1L)
-            .lng(BigDecimal.valueOf(20.001))
-            .lat(BigDecimal.valueOf(-1.3))
+            .lng(20.001)
+            .lat(-1.3)
             .build();
         when(geofenceRepository.findById(1L)).thenReturn(Optional.of(geofence));
 
@@ -76,8 +75,8 @@ public class GeofenceServiceTests {
     public void testCanUpdateGeofence() {
         Geofence geofence = Geofence.builder()
             .id(1L)
-            .lng(BigDecimal.valueOf(25.001))
-            .lat(BigDecimal.valueOf(5.3))
+            .lng(25.001)
+            .lat(5.3)
             .build();
 
         when(geofenceRepository.save(geofence)).thenReturn(geofence);
@@ -91,8 +90,8 @@ public class GeofenceServiceTests {
     public void testCanDeleteGeofence() {
         Geofence geofence = Geofence.builder()
             .id(1L)
-            .lng(BigDecimal.valueOf(25.001))
-            .lat(BigDecimal.valueOf(5.3))
+            .lng(25.001)
+            .lat(5.3)
             .build();
 
         when(geofenceRepository.findById(1L)).thenReturn(Optional.of(geofence));
