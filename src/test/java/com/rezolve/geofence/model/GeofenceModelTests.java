@@ -9,8 +9,7 @@ import javax.validation.Validator;
 import java.math.BigDecimal;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GeofenceModelTests {
 
@@ -20,11 +19,20 @@ public class GeofenceModelTests {
     public void testCanCreateValidGeofence() {
         Geofence geofence = Geofence.builder()
             .lat(BigDecimal.valueOf(20.0))
-            .lng(BigDecimal.valueOf(11.1))
+            .lng(BigDecimal.valueOf(11.1000000))
             .build();
         assertEquals(BigDecimal.valueOf(20.0), geofence.getLat(), "Lat value is set when creating valid Geofence");
-        assertEquals(BigDecimal.valueOf(11.1), geofence.getLng(), "Lng value is set when creating valid Geofence");
+        assertEquals(BigDecimal.valueOf(11.1000000), geofence.getLng(), "Lng value is set when creating valid Geofence");
         assertTrue(isValid(geofence), "Can create a valid Geofence");
+    }
+
+    @Test
+    public void testGeofenceWithNoPrecisionIsInvalid() {
+        Geofence geofence = Geofence.builder()
+            .lat(BigDecimal.valueOf(20))
+            .lng(BigDecimal.valueOf(11))
+            .build();
+        assertFalse(isValid(geofence), "Geofence is invalid");
     }
 
     @BeforeEach

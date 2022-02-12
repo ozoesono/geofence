@@ -1,5 +1,6 @@
 package com.rezolve.geofence.model;
 
+import com.rezolve.geofence.util.validator.GeoFencePrecisionConstraint;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,7 +11,9 @@ import java.math.BigDecimal;
 @Data
 public class Geofence {
     @NotNull
+    @GeoFencePrecisionConstraint
     private BigDecimal lat;
+    @GeoFencePrecisionConstraint
     @NotNull
     private BigDecimal lng;
 }
