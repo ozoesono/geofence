@@ -33,7 +33,7 @@ public class GeofenceServiceIntegrationTests {
 
         Geofence saveGeofence = geofenceService.saveGeofence(geofence);
         assertNotNull(geofence, "Geofence is saved to the database");
-        assertEquals(1L, saveGeofence.getId(), "Geofence has a new id");
+        assertNotNull(saveGeofence.getId(), "Geofence has a new id");
     }
 
     @Test

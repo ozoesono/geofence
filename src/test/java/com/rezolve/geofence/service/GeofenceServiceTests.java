@@ -15,11 +15,7 @@ import java.util.HashSet;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class GeofenceServiceTests {

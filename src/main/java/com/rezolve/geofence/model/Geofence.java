@@ -1,6 +1,6 @@
 package com.rezolve.geofence.model;
 
-import com.rezolve.geofence.util.validator.GeoFencePrecisionConstraint;
+import com.rezolve.geofence.util.validator.GeofencePrecisionConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,9 +22,9 @@ public class Geofence {
     @GeneratedValue
     Long id;
     @NotNull
-    @GeoFencePrecisionConstraint
+    @GeofencePrecisionConstraint
     private Double lat;
-    @GeoFencePrecisionConstraint
+    @GeofencePrecisionConstraint
     @NotNull
     private Double lng;
 }

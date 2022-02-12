@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = GeofencePrecisionValidator.class)
 @Target( { ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GeoFencePrecisionConstraint {
+public @interface GeofencePrecisionConstraint {
     String message() default "Invalid phone number";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

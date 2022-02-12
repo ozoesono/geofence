@@ -3,9 +3,9 @@ package com.rezolve.geofence.util.validator;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class GeofencePrecisionValidator implements ConstraintValidator<GeoFencePrecisionConstraint, Double> {
+public class GeofencePrecisionValidator implements ConstraintValidator<GeofencePrecisionConstraint, Double> {
     @Override
-    public void initialize(GeoFencePrecisionConstraint constraintAnnotation) {
+    public void initialize(GeofencePrecisionConstraint constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
