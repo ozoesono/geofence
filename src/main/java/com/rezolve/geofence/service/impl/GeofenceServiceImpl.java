@@ -46,6 +46,17 @@ public class GeofenceServiceImpl implements GeofenceService {
     }
 
     @Override
+    public Geofence getGeofence(Double lat, Double lng) {
+        log.info("Getting Geofence by lat: [{}] and lng: [{}]", lat, lng);
+        Optional<Geofence> geofence = geofenceRepository.findByLatAndLng(lat, lng);
+
+        if (!geofence.isPresent()) {
+            throw new RuntimeException("Geofence does not exist");
+        }
+        return geofence.get();
+    }
+
+    @Override
     @Transactional
     public void deleteGeoFence(Long id) {
         log.info("Deleting Geofence by id: [{}]", id);
@@ -81,5 +92,14 @@ public class GeofenceServiceImpl implements GeofenceService {
             .filter(advert -> !advert.getHref().equals(href)).collect(Collectors.toSet());
         geofenceToUpdate.setAdverts(filteredAdverts);
         geofenceRepository.save(geofenceToUpdate);
+    }
+
+    @Override
+    @Transactional
+    public void addAdvertToGeofence(Advert advert, Geofence geofence) {
+        Set<Advert> updatedAdverts = geofence.getAdverts();
+        updatedAdverts.add(advert);
+        geofence.setAdverts(updatedAdverts);
+        geofenceRepository.save(geofence);
     }
 }

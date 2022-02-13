@@ -11,7 +11,7 @@ public class GeofenceTests extends BaseModelTests {
 
     @Test
     public void testCanCreateValidGeofence() {
-        Geofence geofence = Geofence.builder().lat(20.0).lng(11.1000000).build();
+        Geofence geofence = Geofence.builder().lat(20.0).lng(11.1000000).radius(2.5).build();
         assertEquals(20.0, geofence.getLat(), "Lat value is set when creating valid Geofence");
         assertEquals(11.1000000, geofence.getLng(), "Lng value is set when creating valid Geofence");
         assertTrue(isValid(geofence), "Can create a valid Geofence");
@@ -19,7 +19,7 @@ public class GeofenceTests extends BaseModelTests {
 
     @Test
     public void testGeofenceWithPrecisionAboveSevenIsInvalid() {
-        Geofence geofence = Geofence.builder().lat(20.00290909092).lng(11.20903902902).build();
+        Geofence geofence = Geofence.builder().lat(20.00290909092).lng(11.20903902902).radius(2.1).build();
         assertFalse(isValid(geofence), "Geofence is invalid");
     }
 }

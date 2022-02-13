@@ -12,7 +12,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.transaction.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -29,6 +31,7 @@ public class GeofenceServiceIntegrationTests {
         Geofence geofence = Geofence.builder()
             .lng(20.001)
             .lat(-1.3)
+            .radius(23.1)
             .build();
 
         Geofence saveGeofence = geofenceService.saveGeofence(geofence);
@@ -41,6 +44,7 @@ public class GeofenceServiceIntegrationTests {
         Geofence geofence = Geofence.builder()
             .lng(19.10)
             .lat(-1.30)
+            .radius(3.1)
             .build();
 
         Geofence savedGeofence = geofenceService.saveGeofence(geofence);
@@ -56,6 +60,7 @@ public class GeofenceServiceIntegrationTests {
         Geofence geofence = Geofence.builder()
             .lng(20.001)
             .lat(-1.3)
+            .radius(3.4)
             .build();
 
         Geofence geofenceToEdit = geofenceService.saveGeofence(geofence);
@@ -73,6 +78,7 @@ public class GeofenceServiceIntegrationTests {
         Geofence geofence = Geofence.builder()
             .lng(20.001)
             .lat(-1.3)
+            .radius(23.1)
             .build();
 
         Geofence savedGeofence = geofenceService.saveGeofence(geofence);
