@@ -1,4 +1,4 @@
-package com.rezolve.geofence.util.validator;
+package com.rezolve.geofence.validator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

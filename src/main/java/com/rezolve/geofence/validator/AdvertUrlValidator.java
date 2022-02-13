@@ -1,4 +1,4 @@
-package com.rezolve.geofence.util.validator;
+package com.rezolve.geofence.validator;
 
 import org.springframework.stereotype.Component;
 

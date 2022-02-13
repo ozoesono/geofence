@@ -1,14 +1,12 @@
 package com.rezolve.geofence.model;
 
-import com.rezolve.geofence.util.validator.AdvertUrlConstraint;
+import com.rezolve.geofence.validator.AdvertUrlConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 
 @Builder
@@ -23,4 +21,7 @@ public class Advert {
     @Pattern(regexp = "\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]")
     @AdvertUrlConstraint
     private String href;
+    @ManyToOne
+    @JoinColumn(name="geofence_id", nullable=false)
+    private Geofence geofence;
 }
