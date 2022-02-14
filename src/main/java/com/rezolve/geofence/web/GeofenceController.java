@@ -1,22 +1,18 @@
 package com.rezolve.geofence.web;
 
-import com.rezolve.geofence.dto.AdvertDto;
-import com.rezolve.geofence.dto.EntranceDto;
-import com.rezolve.geofence.dto.GeofenceDto;
+import com.rezolve.geofence.dto.*;
 import com.rezolve.geofence.model.Advert;
 import com.rezolve.geofence.model.Geofence;
 import com.rezolve.geofence.service.GeofenceService;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Set;
 
 import static com.rezolve.geofence.util.Constant.*;
@@ -25,16 +21,15 @@ import static com.rezolve.geofence.util.Constant.*;
 @RequestMapping(BASE_GEOFENCE_API_URL)
 @Slf4j
 @AllArgsConstructor
-@NoArgsConstructor
 public class GeofenceController {
     private GeofenceService geofenceService;
     private ModelMapper modelMapper;
 
     @PostMapping
-    public ResponseEntity<?> createGeofence(GeofenceDto geofenceDto) {
+    public ResponseEntity<?> createGeofence(@Valid @RequestBody GeofenceRequestDto geofenceRequestDto) {
 
-        log.info("Creating Geofence with details: [{}]", geofenceDto);
-        Geofence geofence = modelMapper.map(geofenceDto, Geofence.class);
+        log.info("Creating Geofence with details: [{}]", geofenceRequestDto);
+        Geofence geofence = modelMapper.map(geofenceRequestDto, Geofence.class);
         Geofence savedGeofence = geofenceService.saveGeofence(geofence);
 
         if (savedGeofence == null) {
@@ -44,19 +39,32 @@ public class GeofenceController {
     }
 
     @PostMapping(ADVERT_URL)
-    public ResponseEntity<?> createAdvert(AdvertDto advertDto) {
+    public ResponseEntity<?> createAdvert(@Valid @RequestBody AdvertRequestDto advertRequestDto) {
 
-        log.info("Creating Advert with details: [{}]", advertDto);
-        Advert advert = modelMapper.map(advertDto, Advert.class);
-        Geofence geofence = geofenceService.getGeofence(advertDto.getLat(), advertDto.getLng());
+        log.info("Creating Advert with details: [{}]", advertRequestDto);
+        Advert advert = modelMapper.map(advertRequestDto, Advert.class);
+        Geofence geofence = geofenceService.getGeofence(advertRequestDto.getLat(), advertRequestDto.getLng());
+        if (geofence == null) {
+            return ResponseEntity.badRequest().build();
+        }
         geofenceService.addAdvertToGeofence(advert, geofence);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(ENTRANCE_URL)
-    public ResponseEntity<?> getEntrance(EntranceDto entranceDto) {
-        log.info("Getting Entrance (Adverts) with details: [{}]", entranceDto);
-        Set<Advert> adverts = geofenceService.getAdverts(entranceDto.getLat(), entranceDto.getLng());
-        return ResponseEntity.ok(adverts);
+    @PostMapping(ENTRANCE_URL)
+    public ResponseEntity<?> getEntrance(@Valid @RequestBody EntranceRequestDto entranceRequestDto) {
+        log.info("Getting Entrance (Adverts) with details: [{}]", entranceRequestDto);
+        final Geofence geofence = geofenceService.getGeofence(entranceRequestDto.getLat(), entranceRequestDto.getLng());
+        if (geofence == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        final Set<AdvertResponseDto> advertResponseDtos = new HashSet<>();
+        geofence.getAdverts().forEach(advert -> advertResponseDtos.add(modelMapper.map(advert, AdvertResponseDto.class)));
+        EntranceResponseDto entranceResponseDto = EntranceResponseDto.builder()
+            .distance(geofence.getRadius())
+            .adverts(advertResponseDtos)
+            .build();
+
+        return ResponseEntity.ok(entranceResponseDto);
     }
 }

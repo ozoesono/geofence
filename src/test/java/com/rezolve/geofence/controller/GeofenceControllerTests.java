@@ -1,8 +1,9 @@
 package com.rezolve.geofence.controller;
 
-import com.rezolve.geofence.dto.AdvertDto;
-import com.rezolve.geofence.dto.EntranceDto;
-import com.rezolve.geofence.dto.GeofenceDto;
+import com.rezolve.geofence.dto.AdvertRequestDto;
+import com.rezolve.geofence.dto.AdvertResponseDto;
+import com.rezolve.geofence.dto.EntranceRequestDto;
+import com.rezolve.geofence.dto.GeofenceRequestDto;
 import com.rezolve.geofence.model.Advert;
 import com.rezolve.geofence.model.Geofence;
 import com.rezolve.geofence.service.GeofenceService;
@@ -38,13 +39,13 @@ public class GeofenceControllerTests {
     @Test
     public void testCanCreateGeofence() {
         Long id = 1L;
-        GeofenceDto geofenceDto = GeofenceDto.builder().lat(20.001).lng(-23.32).radius(2.0).build();
+        GeofenceRequestDto geofenceRequestDto = GeofenceRequestDto.builder().lat(20.001).lng(-23.32).radius(2.0).build();
         Geofence geofence = Geofence.builder().lat(20.001).lng(-23.32).build();
         Geofence savedGeofence = Geofence.builder().id(id).lat(20.001).lng(-23.32).build();
-        when(modelMapper.map(geofenceDto, Geofence.class)).thenReturn(geofence);
+        when(modelMapper.map(geofenceRequestDto, Geofence.class)).thenReturn(geofence);
         when(geofenceService.saveGeofence(geofence)).thenReturn(savedGeofence);
 
-        ResponseEntity<?> response = geofenceController.createGeofence(geofenceDto);
+        ResponseEntity<?> response = geofenceController.createGeofence(geofenceRequestDto);
         assertEquals(201, response.getStatusCode().value(), "Geofence created with created response code");
         List<String> locations = response.getHeaders().get("Location");
         assertTrue(locations.contains("/api/v1/geofence/1"));
@@ -52,18 +53,18 @@ public class GeofenceControllerTests {
 
     @Test
     public void testCreatesBadRequestOnSaveWithBadData() {
-        GeofenceDto geofenceDto = GeofenceDto.builder().lat(20.001).lng(-23.32).radius(2.0).build();
+        GeofenceRequestDto geofenceRequestDto = GeofenceRequestDto.builder().lat(20.001).lng(-23.32).radius(2.0).build();
         Geofence geofence = Geofence.builder().lat(20.001).lng(-23.32).build();
-        when(modelMapper.map(geofenceDto, Geofence.class)).thenReturn(geofence);
+        when(modelMapper.map(geofenceRequestDto, Geofence.class)).thenReturn(geofence);
         when(geofenceService.saveGeofence(geofence)).thenReturn(null);
 
-        ResponseEntity<?> response = geofenceController.createGeofence(geofenceDto);
+        ResponseEntity<?> response = geofenceController.createGeofence(geofenceRequestDto);
         assertEquals(400, response.getStatusCode().value(), "Geofence is not created if save fails");
     }
 
     @Test
     public void testCanCreateAdvertInGeofence() {
-        AdvertDto advertDto = AdvertDto
+        AdvertRequestDto advertRequestDto = AdvertRequestDto
             .builder()
             .href("https://google.com")
             .lat(20.001)
@@ -73,26 +74,44 @@ public class GeofenceControllerTests {
         Advert advert = Advert.builder().href("https://google.com").build();
         Geofence geofence = Geofence.builder().lat(20.001).lng(-23.32).build();
 
-        when(modelMapper.map(advertDto, Advert.class)).thenReturn(advert);
+        when(modelMapper.map(advertRequestDto, Advert.class)).thenReturn(advert);
         when(geofenceService.getGeofence(20.001, -23.32)).thenReturn(geofence);
         doNothing().when(geofenceService).addAdvertToGeofence(advert, geofence);
 
-        ResponseEntity<?> response = geofenceController.createAdvert(advertDto);
+        ResponseEntity<?> response = geofenceController.createAdvert(advertRequestDto);
         assertEquals(200, response.getStatusCode().value(), "Advert can be created in Geofence");
     }
 
     @Test
     public void testCanGetGeofenceEntrance() {
+        Geofence geofence = Geofence.builder()
+            .lng(20.001)
+            .lat(-1.3)
+            .radius(23.1)
+            .build();
         final Set<Advert> adverts = new HashSet<>();
-        adverts.add(Advert.builder().id(1L).href("https://google.com").build());
-        adverts.add(Advert.builder().id(2L).href("https://oracle.com").build());
+        adverts.add(Advert.builder().href("https://google.com").build());
+        geofence.setAdverts(adverts);
 
-        when(geofenceService.getAdverts(-1.3, 20.001)).thenReturn(adverts);
+        Geofence persistedGeofence = Geofence.builder()
+            .id(1L)
+            .lng(20.001)
+            .lat(-1.3)
+            .radius(23.1)
+            .build();
 
-        EntranceDto entranceDto = EntranceDto.builder().lat(-1.3).lng(20.001).build();
-        ResponseEntity<?> response = geofenceController.getEntrance(entranceDto);
-        assertEquals(200, response.getStatusCode().value(), "Advert can be gotten from coordinates in Geofence");
-        assertTrue(response.getBody().toString().contains("https://google.com"));
-        assertTrue(response.getBody().toString().contains("https://oracle.com"));
+        final Set<Advert> persistedAdverts = new HashSet<>();
+        final Advert advert = Advert.builder().id(1L).href("https://google.com").build();
+        persistedAdverts.add(advert);
+        persistedGeofence.setAdverts(persistedAdverts);
+
+        final AdvertResponseDto advertResponseDto = AdvertResponseDto.builder().href("https://google.com").build();
+
+        when(geofenceService.getGeofence(-1.3, 20.001)).thenReturn(persistedGeofence);
+        when(modelMapper.map(advert, AdvertResponseDto.class)).thenReturn(advertResponseDto);
+
+        EntranceRequestDto entranceRequestDto = EntranceRequestDto.builder().lat(-1.3).lng(20.001).build();
+        ResponseEntity<?> response = geofenceController.getEntrance(entranceRequestDto);
+        assertEquals(200, response.getStatusCode().value(), "Entrance can be gotten from coordinates in Geofence");
     }
 }

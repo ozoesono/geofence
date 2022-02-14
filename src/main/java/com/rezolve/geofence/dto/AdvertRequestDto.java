@@ -1,21 +1,25 @@
 package com.rezolve.geofence.dto;
 
+import com.rezolve.geofence.validator.AdvertUrlConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GeofenceDto {
+public class AdvertRequestDto {
+    @NotNull
+    @AdvertUrlConstraint
+    private String href;
     @NotNull
     private Double lat;
     @NotNull
     private Double lng;
-    @NotNull
-    private Double radius;
 }

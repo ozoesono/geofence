@@ -1,5 +1,6 @@
 package com.rezolve.geofence.service.impl;
 
+import com.rezolve.geofence.exception.GeofenceException;
 import com.rezolve.geofence.model.Advert;
 import com.rezolve.geofence.model.Geofence;
 import com.rezolve.geofence.repository.GeofenceRepository;
@@ -7,6 +8,7 @@ import com.rezolve.geofence.service.GeofenceService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.zalando.problem.Status;
 
 import javax.transaction.Transactional;
 import javax.validation.Validator;
@@ -29,7 +31,7 @@ public class GeofenceServiceImpl implements GeofenceService {
         log.info("Saving Geofence: [{}]", geofence);
         if (!validator.validate(geofence).isEmpty()) {
             log.error("Error saving geofence due to validation errors");
-            throw new RuntimeException("Error saving Geofence");
+            throw new GeofenceException("Error saving Geofence", Status.BAD_REQUEST);
         }
         return geofenceRepository.save(geofence);
     }
@@ -40,7 +42,7 @@ public class GeofenceServiceImpl implements GeofenceService {
         log.info("Getting Geofence by id: [{}]", id);
         Optional<Geofence> geofence = geofenceRepository.findById(id);
         if (!geofence.isPresent()) {
-            throw new RuntimeException("Geofence does not exist");
+            throw new GeofenceException("Geofence does not exist", Status.BAD_REQUEST);
         }
         return geofence.get();
     }
@@ -51,7 +53,7 @@ public class GeofenceServiceImpl implements GeofenceService {
         Optional<Geofence> geofence = geofenceRepository.findByLatAndLng(lat, lng);
 
         if (!geofence.isPresent()) {
-            throw new RuntimeException("Geofence does not exist");
+            throw new GeofenceException("Geofence does not exist", Status.BAD_REQUEST);
         }
         return geofence.get();
     }
@@ -62,7 +64,7 @@ public class GeofenceServiceImpl implements GeofenceService {
         log.info("Deleting Geofence by id: [{}]", id);
         Optional<Geofence> geofence = geofenceRepository.findById(id);
         if (!geofence.isPresent()) {
-            throw new RuntimeException("Geofence does not exist");
+            throw new GeofenceException("Geofence does not exist", Status.BAD_REQUEST);
         }
         geofenceRepository.delete(geofence.get());
     }
@@ -73,7 +75,7 @@ public class GeofenceServiceImpl implements GeofenceService {
         log.info("Getting adverts give Geofence coordinates - lat: [{}] and lng: [{}]", lat, lng);
         Optional<Geofence> geofence = geofenceRepository.findByLatAndLng(lat, lng);
         if (!geofence.isPresent()) {
-            throw new RuntimeException("Geofence does with specified coordinates not exist");
+            throw new GeofenceException("Geofence does with specified coordinates not exist", Status.BAD_REQUEST);
         }
         return geofence.get().getAdverts();
     }
@@ -85,7 +87,7 @@ public class GeofenceServiceImpl implements GeofenceService {
             href, lat, lng);
         Optional<Geofence> geofence = geofenceRepository.findByLatAndLng(lat, lng);
         if (!geofence.isPresent()) {
-            throw new RuntimeException("Geofence does with specified coordinates not exist");
+            throw new GeofenceException("Geofence does with specified coordinates not exist", Status.BAD_REQUEST);
         }
         Geofence geofenceToUpdate = geofence.get();
         Set<Advert> filteredAdverts = geofenceToUpdate.getAdverts().stream()
@@ -97,6 +99,7 @@ public class GeofenceServiceImpl implements GeofenceService {
     @Override
     @Transactional
     public void addAdvertToGeofence(Advert advert, Geofence geofence) {
+        advert.setGeofence(geofence);
         Set<Advert> updatedAdverts = geofence.getAdverts();
         updatedAdverts.add(advert);
         geofence.setAdverts(updatedAdverts);

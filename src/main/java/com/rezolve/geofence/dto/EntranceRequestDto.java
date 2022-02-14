@@ -2,16 +2,18 @@ package com.rezolve.geofence.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EntranceDto {
+public class EntranceRequestDto {
     @NotNull
     private Double lat;
     @NotNull
