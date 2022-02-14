@@ -43,6 +43,7 @@ public class Geofence implements Serializable {
     @OneToMany(mappedBy = "geofence", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     Set<Advert> adverts;
 
+    // Overriding this due to known issue with Lombok implementation
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -51,6 +52,7 @@ public class Geofence implements Serializable {
         return Objects.equals(getId(), geofence.getId());
     }
 
+    // Overriding this due to known issue with Lombok implementation
     @Override
     public int hashCode() {
         return Objects.hash(getId());

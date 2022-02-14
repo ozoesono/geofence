@@ -36,6 +36,7 @@ public class Advert implements Serializable {
     @JoinColumn(name = "geofence_id", nullable = false)
     private Geofence geofence;
 
+    // Overriding this due to known issue with Lombok implementation
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -44,6 +45,7 @@ public class Advert implements Serializable {
         return Objects.equals(getId(), advert.getId());
     }
 
+    // Overriding this due to known issue with Lombok implementation
     @Override
     public int hashCode() {
         return Objects.hash(getId());
